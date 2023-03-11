@@ -11,13 +11,13 @@
 <body>
 
         <div id="app">
-          <h1>Weather App Eastern Time Refresh for data update!!!</h1>
+          <h1>Weather at Storrs CT</h1>
           <div v-if="weather">
             <h2>{{ weather.name }}</h2>
-            <h3>{{ formatTime(weather.dt) }}</h3>
-            <p>Temperature: {{ weather.temp }}&deg;K</p>
-            <p>Feels Like: {{ weather.feels_like }}&deg;K</p>
-            <p>Description: {{ weather.weather[0].description }}</p>
+            <h3>Time:{{ formatTime(weather.dt) }}</h3>
+            <p>Temperature: {{ celsiusTemp }}&deg;F</p>
+            <p>Feels Like: {{ celsiusFeelsLike }}&deg;F</p>
+            <p>Weather Condition: {{ weather.weather[0].description }}</p>
           </div>
         </div>
       
@@ -48,7 +48,15 @@
             return `${hours}:${minutes.substr(-2)}`;
           },
         },
-        
+        computed: {
+          celsiusTemp() {
+            return ((this.weather.temp - 273.15) * 9/5 + 32).toFixed(1);
+          },
+          celsiusFeelsLike() {
+            return ((this.weather.feels_like - 273.15) * 9/5 + 32).toFixed(1);
+          }
+        },
+
         //calling the fetchWeather() method to get the data.
          mounted() {
           this.fetchWeather();
