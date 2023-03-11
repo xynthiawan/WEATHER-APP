@@ -35,7 +35,7 @@
     
         methods: {
           async fetchWeather() {
-            const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${this.lat}&lon=${this.lon}&units=metric&appid=${this.apiKey}`;
+            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&appid=7668c34b11bb769550dc500a85ba5bd1`;
             const response = await fetch(url);
             const data = await response.json();
             this.weather = data.current;
@@ -47,6 +47,12 @@
             return `${hours}:${minutes.substr(-2)}`;
           },
         },
+        
+        //calling the fetchWeather() method to get the data.
+         mounted() {
+          this.fetchWeather();
+        },
+
       });
 
       app.mount('#app');
