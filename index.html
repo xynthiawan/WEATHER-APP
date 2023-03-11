@@ -15,8 +15,8 @@
           <div v-if="weather">
             <h2>{{ weather.name }}</h2>
             <h3>{{ formatTime(weather.dt) }}</h3>
-            <p>Temperature: {{ weather.temp }}&deg;C</p>
-            <p>Feels Like: {{ weather.feels_like }}&deg;C</p>
+            <p>Temperature: {{ weather.temp }}&deg;K</p>
+            <p>Feels Like: {{ weather.feels_like }}&deg;K</p>
             <p>Description: {{ weather.weather[0].description }}</p>
           </div>
         </div>
@@ -26,9 +26,9 @@
         name: "App",
         data() {
           return {
-            apiKey: "8fa177f6928cc4667ba2cd992b733411",
-            lat: "37.7749",
-            lon: "-122.4194",
+            apiKey: "7668c34b11bb769550dc500a85ba5bd1",
+            lat: "41.603222",
+            lon: "-73.087746",
             weather: null,
           };
         },
@@ -39,6 +39,7 @@
             const response = await fetch(url);
             const data = await response.json();
             this.weather = data.current;
+            console.log(data);
           },
           formatTime(timestamp) {
             const date = new Date(timestamp * 1000);
