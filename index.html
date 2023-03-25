@@ -1,72 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <script src="https://unpkg.com/vue@3"></script>
-    <title>WEATHER APP</title>
+<html>
+  <head>
+  <link
+    href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+    rel="stylesheet"
+    />
+  <link
+    href="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.css"
+    rel="stylesheet"
+    />
 </head>
-<body>
+  <body>
+    <div id="app"></div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.js"></script>
+    <script type="text/x-template" id="app-template">
+      <main>
+        <div class='search-box'>
+          <input type="text" name='' id="" class="search-bar" placeholder="Search..."/>
+      <v-app>
+        <div class="align-center text-center template-center">
+        <v-card
+          class="mx-auto"
+          width="400"
+          append-icon="mdi-person"
+          style="margin-bottom: 20px;"
+        >
+          <template v-slot:title>
+            {{header}}
+          </template>
+          <v-card-text>
+            {{description}}
+          </v-card-text>
+          <v-card-text>
+            {{description}}
+          </v-card-text>
+        </v-card>
+        <v-card 
+        class="mx-auto"
+        width="400"
+        append-icon="mdi-umberella"
+      >
 
-        <div id="app">
-          <h1>Weather at Storrs CT</h1>
-          <div v-if="weather">
-            <h2>{{ weather.name }}</h2>
-            <h3>Time:{{ formatTime(weather.dt) }}</h3>
-            <p>Temperature: {{ celsiusTemp }}&deg;F</p>
-            <p>Feels Like: {{ celsiusFeelsLike }}&deg;F</p>
-            <p>Weather Condition: {{ weather.weather[0].description }}</p>
-          </div>
-        </div>
+
+
+      <!-- new bottom nav sections-->
+      <template>
+        <v-bottom-navigation
+          v-model="activeTabIndex"
+          shift
+          :value="activeTabIndex"
+        >
+          <v-btn v-for="(tab, index) in tabs" :key="index" @click="activeTabIndex = index">
+            <v-icon>{{ tab.icon }}</v-icon>
+            <span>{{ tab.title }}</span>
+          </v-btn>
+        </v-bottom-navigation>
+      </template>
+
+
+
+
+        <template v-slot:title class="text-center">
+          {{header}}
+        </template>
+        <v-card-text>
+          {{description}}
+        </v-card-text>
+      </v-card>
+      </v-app>
+    </div>
+    </script>
+    <script>
+  // import functions of veutify + vue
+      const { createApp } = Vue;
+      const { createVuetify } = Vuetify;
+
+      //make a new instance
+      const vuetify = createVuetify();
       
-      <script>
-      const app =Vue.createApp({
-        name: "App",
-        data() {
+      //make a new instance of app
+      const app = createApp({
+        //specify app template
+        template: "#app-template", 
+        data(){
+          //app data will use
           return {
-            apiKey: "7668c34b11bb769550dc500a85ba5bd1",
-            lat: "41.603222",
-            lon: "-73.087746",
-            weather: null,
-          };
-        },
-    
-        methods: {
-          async fetchWeather() {
-            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=41.60&lon=-73.08&appid=7668c34b11bb769550dc500a85ba5bd1`;
-            const response = await fetch(url);
-            const data = await response.json();
-            this.weather = data.current;
-            console.log(data);
-          },
-          formatTime(timestamp) {
-            const date = new Date(timestamp * 1000);
-            const hours = date.getHours();
-            const minutes = "0" + date.getMinutes();
-            return `${hours}:${minutes.substr(-2)}`;
-          },
-        },
-        computed: {
-          celsiusTemp() {
-            return ((this.weather.temp - 273.15) * 9/5 + 32).toFixed(1);
-          },
-          celsiusFeelsLike() {
-            return ((this.weather.feels_like - 273.15) * 9/5 + 32).toFixed(1);
+            header:"CURRENT TEMPERATURE",
+            description:"Right now is xx degree",
+            activeTabIndex:0,
+            tabs: [
+            { title: 'Home', icon: 'mdi-home' },
+            { title: 'Settings', icon: 'mdi-cog' },
+            { title: 'Profile', icon: 'mdi-account' },
+      ],
           }
         },
+      })
+      //lets use the veutify library
+        .use(vuetify)
+      //final must step give id app a soul
+        .mount("#app");
 
-        //calling the fetchWeather() method to get the data.
-         mounted() {
-          this.fetchWeather();
-        },
 
-      });
+//  This is my API key for OpenWeatherMap
+const api = '7668c34b11bb769550dc500a85ba5bd1'; 
 
-      app.mount('#app');
-      
-      </script>
-      
-</body>
+
+const iconImg = document.getElementById('weather-icon');
+const loc = document.querySelector('#location');
+const tempC = document.querySelector('.c');
+const tempF = document.querySelector('.f');
+const desc = document.querySelector('.desc');
+const desce = document.querySelector('.desc');
+const sunriseDOM = document.querySelector('.sunrise');
+const sunsetDOM = document.querySelector('.sunset');
+
+// This code runs when the window loads
+window.addEventListener('load', () => {
+  let long;
+  let lat;
+  // This checks if the user's browser allows geolocation
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      // Storing Longitude and Latitude in variables
+      long = position.coords.longitude;
+      lat = position.coords.latitude;
+        // This is the base URL for the OpenWeatherMap API
+      const base = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api}&units=metric`;
+
+      // Using fetch to get data
+      fetch(base)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          const { temp, feels_like } = data.main;
+          const place = data.name;
+          const { description, icon } = data.weather[0];
+          const { sunrise, sunset } = data.sys;
+
+          const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+          const fahrenheit = (temp * 9) / 5 + 32;
+
+          // Converting Epoch(Unix) time to GMT
+          const sunriseGMT = new Date(sunrise * 1000);
+          const sunsetGMT = new Date(sunset * 1000);
+
+          // Interacting with DOM to show data
+          /*loc.textContent = `${place}`;
+          desc.textContent = `${description}`;
+          desce.textContent = `${description}`;
+          tempC.textContent = `${temp.toFixed(2)} °C`;
+          tempF.textContent = `${fahrenheit.toFixed(2)} °F`;
+          sunriseDOM.textContent = `${sunriseGMT.toLocaleDateString()}, ${sunriseGMT.toLocaleTimeString()}`;
+          sunsetDOM.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;*/
+        });
+    });
+  }
+  
+});
+    </script>
+
+    <style>
+      *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+      }
+
+      body{
+        font-family:"montserrat", sans-serif;
+      }
+
+      #app{
+        background:lightblue;
+        background-size:cover;
+        background-position:bottom;
+        transition:0.4s;
+      }
+
+      main{
+        min-height:100vh;
+      }
+    </style>
+  </body>
 </html>
