@@ -9,111 +9,158 @@
     href="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.css"
     rel="stylesheet"
     />
+
+    
 </head>
   <body>
-    <div id="app"></div>
+    <title>Vue Weather App</title>
+    <div id="app" :style="{ backgroundColor: backgroundColor, backgroundImage: `url(${backgroundImage})` }"></div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.js"></script>
     <script type="text/x-template" id="app-template">
-      <main>
-        <div class='search-box'>
-          <input 
-          type="text" 
-          class="search-bar" 
-          placeholder="Search..."
-          v-model="query"
-          @keypress="fetchWeather"
-        />
-        </div>
+      <v-app >
+        
 
+        <v-container class="container text-center"  >
+       
+          <v-row justify="space-around" >
+            <v-card width="400" style="backgroundColor:lightgreen">
+        <v-col>
+              <v-card-text >
+                <div class="text-center ">
+                  <div class="text-decoration-underline"> 
+                      <v-btn variant="flat font-weight-bold">TODAY</v-btn>  
+                  </div>
+                <div class="font-weight-bold mb-3" id="location">
+                  Place Name
+                </div>
 
+                <div class="d-flex justify-space-around">
+                <div
+                class="f"
+                cols="6"
+              >
+                00 F
+                </div>
+              
+
+              <div
+              class="c"
+              cols="3"
+            >
+              00 C
+            </div>
+          </v-col>
+          <v-container class="text-center">
+            <v-row justify="space-around">
+              <v-card width="400">
+        
+                <v-card-text>
+                  <div class="font-weight-medium ms-1 mb-1">
+                    Weather Condition
+                  </div>
+                  <div>
+                      Your location has <span class="desc"> lorem </span>.
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-row>
+          </v-container>
+          </div>
+        
+
+        <v-container class="text-center">
+          <v-row justify="space-around">
+            <v-card width="400">
       
-        <div class="align-center text-center template-center">
-        <v-card
-          class="mx-auto"
-          width="400"
-          append-icon="mdi-person"
-          style="margin-bottom: 20px;"
-        >
-          <template v-slot:title>
-            {{header}}
-          </template>
-          <v-card-text>
-            {{description}}
-          </v-card-text>
-          <v-card-text>
-            {{description}}
-          </v-card-text>
-        </v-card>
-        <v-card 
-        class="mx-auto"
-        width="400"
-        append-icon="mdi-umberella"
-      >
+              <v-card-text>
+                <div class="font-weight-medium ms-1 mb-1 ">
+                  Description
+                </div>
+                <div>
+                    Today's weather has <span class="desc"> lorem </span>.
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-row>
+        </v-container>
 
+        <v-container class="info text-center " :style="{ width: containerWidth }">
+          <v-row justify="space-around">
+            <v-card width="400">
+      
+              <v-card-text >
+                <div class="font-weight-medium ms-1 mb-1">
+                  Sunrise
+                </div>
+                
+                <div class="sunrise">
+                  Lorem ipsum adipisicing elit. Mollitia quam vitae adipisci magnam iste. 
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-row>
+        </v-container>
 
+        <v-container class="info text-center">
+          <v-row justify="space-around">
+            <v-card width="400">
+      
+              <v-card-text>
+                <div class="font-weight-medium ms-1 mb-1">
+                  Sunset
+                </div>
+                
+                <div class="sunset">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-row>
+        </v-container>    
 
-      <!-- new bottom nav sections-->
-      <template>
-        <v-bottom-navigation
-          v-model="activeTabIndex"
-          shift
-          :value="activeTabIndex"
-        >
-          <v-btn v-for="(tab, index) in tabs" :key="index" @click="activeTabIndex = index">
-            <v-icon>{{ tab.icon }}</v-icon>
-            <span>{{ tab.title }}</span>
-          </v-btn>
-        </v-bottom-navigation>
-      </template>
+        <v-container class="text-center">
+          <v-row flex-wrap="wrap" justify="space-between">
+            <v-card width="400">
+      
+              <div>
+                <v-row align-items-center justify-content-center>
+                  <v-icon>mdi-home</v-icon>
+                </v-row>
+              </div>
 
+            </v-card>
+          </v-row>
+        </v-container>
 
-
-
-        <template v-slot:title class="text-center">
-          {{header}}
-        </template>
-        <v-card-text>
-          {{description}}
-        </v-card-text>
-      </v-card>
       </v-app>
-    </div>
     </script>
     <script>
-  // import functions of veutify + vue
       const { createApp } = Vue;
       const { createVuetify } = Vuetify;
-
-      //make a new instance
+      
       const vuetify = createVuetify();
       
-      //make a new instance of app
       const app = createApp({
-        //specify app template
         template: "#app-template", 
         data(){
-          //app data will use
           return {
-            header:"CURRENT TEMPERATURE",
-            description:"Right now is xx degree",
-            activeTabIndex:0,
-            tabs: [
-            { title: 'Home', icon: 'mdi-home' },
-            { title: 'Settings', icon: 'mdi-cog' },
-            { title: 'Profile', icon: 'mdi-account' },
-      ],
+            header:"Hello!",
+            description:"This is a description for you!",
+            containerWidth: '30%',
+            backgroundColor: "#ffffff",
+           backgroundImage: "url('https://example.com/background-image.jpg')"
           }
+          console.log(data);
         },
       })
-      //lets use the veutify library
         .use(vuetify)
-      //final must step give id app a soul
         .mount("#app");
 
 
-//  This is my API key for OpenWeatherMap
-const api = '7668c34b11bb769550dc500a85ba5bd1'; 
+
+// Openweathermap API. Do not share it publicly.
+const api = '713c23c0545cd0de3150dfe7dc9bab15';
 
 
 const iconImg = document.getElementById('weather-icon');
@@ -125,17 +172,15 @@ const desce = document.querySelector('.desc');
 const sunriseDOM = document.querySelector('.sunrise');
 const sunsetDOM = document.querySelector('.sunset');
 
-// This code runs when the window loads
 window.addEventListener('load', () => {
   let long;
   let lat;
-  // This checks if the user's browser allows geolocation
+  // Accesing Geolocation of User
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       // Storing Longitude and Latitude in variables
       long = position.coords.longitude;
       lat = position.coords.latitude;
-        // This is the base URL for the OpenWeatherMap API
       const base = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api}&units=metric`;
 
       // Using fetch to get data
@@ -157,41 +202,19 @@ window.addEventListener('load', () => {
           const sunsetGMT = new Date(sunset * 1000);
 
           // Interacting with DOM to show data
-          /*loc.textContent = `${place}`;
+          loc.textContent = `${place}`;
           desc.textContent = `${description}`;
           desce.textContent = `${description}`;
           tempC.textContent = `${temp.toFixed(2)} °C`;
           tempF.textContent = `${fahrenheit.toFixed(2)} °F`;
           sunriseDOM.textContent = `${sunriseGMT.toLocaleDateString()}, ${sunriseGMT.toLocaleTimeString()}`;
-          sunsetDOM.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;*/
+          sunsetDOM.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;
         });
     });
   }
   
 });
     </script>
-
-    <style>
-      *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-      }
-
-      body{
-        font-family:"montserrat", sans-serif;
-      }
-
-      #app{
-        background:lightblue;
-        background-size:cover;
-        background-position:bottom;
-        transition:0.4s;
-      }
-
-      main{
-        min-height:100vh;
-      }
-    </style>
+    
   </body>
 </html>
