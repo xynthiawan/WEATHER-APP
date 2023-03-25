@@ -17,8 +17,17 @@
     <script type="text/x-template" id="app-template">
       <main>
         <div class='search-box'>
-          <input type="text" name='' id="" class="search-bar" placeholder="Search..."/>
-      <v-app>
+          <input 
+          type="text" 
+          class="search-bar" 
+          placeholder="Search..."
+          v-model="query"
+          @keypress="fetchWeather"
+        />
+        </div>
+
+
+      
         <div class="align-center text-center template-center">
         <v-card
           class="mx-auto"
