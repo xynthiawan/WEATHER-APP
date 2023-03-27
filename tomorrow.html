@@ -18,6 +18,23 @@
     <script src="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.js"></script>
     <script type="text/x-template" id="app-template">
       <v-app>
+      
+   
+          <v-container class="text-center">
+            <v-row flex-wrap="wrap" justify="space-between">
+              <v-card width="400">
+       
+                <div>
+                  <v-row align-items-center justify-content-center>
+                    <v-icon>mdi-home</v-icon>
+                  </v-row>
+                </div>
+   
+   
+              </v-card>
+            </v-row>
+          </v-container>
+   
         <v-card
           class="mx-auto"
           width="400"
@@ -60,9 +77,11 @@
   width="400"
 >
   <v-card-actions>
-    <a href="index.html"><v-btn>Go back</v-btn></a>
+    <a href="index.html"><v-btn>go back</v-btn></a>
   </v-card-actions>
 </v-card>
+
+
   <v-bottom-navigation
         width="400px">
   <v-btn value="recent">
@@ -101,14 +120,14 @@
         template: "#app-template", 
         data(){
           return {
-            header:"Tomorrow's Weather  Forecast",
+            header:"Tomorrow",
             description:"This is a description for you!"
           }
         },
       })
         .use(vuetify)
         .mount("#app");
-    
+
     // Openweathermap API. Do not share it publicly.
 const api = '713c23c0545cd0de3150dfe7dc9bab15';
 
