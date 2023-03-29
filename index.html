@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html>
   
-  <!--all resources are copied from https://vuetifyjs.com/en/components/buttons/-->
+  <!-- vue components such as logos, and wireframes are from https://vuetifyjs.com/en/components/buttons/-->
   <head>
     <script src="https://kit.fontawesome.com/3b1eb95a59.js" crossorigin="anonymous"></script>
   <link
@@ -13,291 +14,164 @@
     rel="stylesheet"
     />
 </head>
-  <body>
-    <div id="app"></div>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.0.5/dist/vuetify.min.js"></script>
-    <script type="text/x-template" id="app-template">
-      <v-app>
-   
-        <v-container class="text-center">
-          <v-row flex-wrap="wrap" justify="space-between">
-            <v-card width="400">
-              
-              <div>
-                <v-row align-items-center justify-content-center>
-                 
-                </v-row>
-              </div>
-            </v-card>
-          </v-row>
-        </v-container>
-      
-        <v-card
-          class="mx-auto"
-          width="400"
-          append-icon="mdi-human-greeting"
-          color=grey
-        >
-        
-          <template v-slot:title>
-            {{header}}
-            <v-text-field class="text-center zipCode" v-model="zipCode" label="Enter your zip code"></v-text-field>
-            <v-btn color="primary" @click="fetchWeatherData">Get Weather</v-btn>
-          <!-- Weather data display code goes here -->
-          </template>
-          <v-card-text>
-            <template v-slot:title>
-              {{weather}}
-            </template>
-            <div class="font-weight-bold mb-3 font-size 2em">
-              Weather Condition
-            </div>
-            <div>
-              Your location has <span class="weather"> Condition</span>.
-            </div>
-          </v-card-text>
+<body>
+<!--The first section of the code includes the required dependencies for the application, such as the Font Awesome kit, Material Design Icons, and Vuetify.-->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- tailwindcss does not interact directly with the DOM (Document Object Model), 
+  but rather with the CSS that is applied to the elements in the DOM.-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-            <v-card-text>
-              <div class="font-weight-bold mb-3 font-size 2em" id="location" >
-                Place Name
-              </div>
-  
-              <div class="justify-space-around">
-                <div class="Fahrenheit">
-                  Temperature F
+<div id="app" class="min-h-full bg-gray-200">
+    <div class="bg-gray-300 flex justify-center">
+        <div class="w-full max-w-md">
+            <div class="space-y-6 m-8">
+                <div class="rounded-md shadow-sm">
+                    <div>
+                        <input @keypress="search" v-model="cityZip" type="text" pattern="\d*" maxlength="5" 
+                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Enter Zip Code Here..."
+                       />
+                    </div>
                 </div>
-  
-                <div class="Celcius">
-                  Temperature C
-                </div>
-              </div>
-            </v-card-text>
-          </v-col>
-          </v-card-text>
-        </v-card>
-        
-        <v-card
-          class="mx-auto"
-          width="400"
-          append-icon="mdi-cloud"
-          color=lightgrey
-          ref="myCard"
-        >
-          <template v-slot:title>
-            {{sunrise}}
-          </template>
-          <v-card-text>
-            <div>
-            Sunrise: <span class="sunrise"> Condition</span>.
             </div>
-            <div>
-              Sunset: <span class="sunset"> Condition</span>.
-              </div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card
-          class="mx-auto"
-          
-          title="Don't forget your umberella"
-          subtitle="today's weather"
-          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-          width="400"
-        >
-          <v-card-actions >
-            <a href="tomorrow.html"><v-btn>Tomorrow</v-btn></a>
-          </v-card-actions>
-        </v-card>
-      
-        <v-container class="container" >
-          <v-row justify="space-around" >
-            <v-card width="400">
-              <v-col>
-              
-      
-              <v-container class="text-center">
-                <v-row justify="space-around">
-                  <v-card width="400">
-                   
-                  </v-card>
-                </v-row>
-              </v-container>
-            </v-card>
-      
-            <v-container class="text-center">
-              <v-row justify="space-around">
-                <v-card width="400">
-                </v-card>
-              </v-row>
-            </v-container>
+        </div>
+    </div>
 
+     <!-- Displaying weather data -->
+    <div class="mx-auto max-w-4xl px-6">
+        <div class="text-left">        
+            <div class="p-6">
+                <div class="p-12 bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div>
+                        <h2 v-else class="text-4xl font-extrabold tracking-tight text-gray-900">{{ cities || '?' }}</h2>
+                        <p class="mt-2">{{ dateTime || '?' }}</p>
+                        <dl class="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-y-10 lg:gap-x-8">
+                        <div class="border-t border-gray-300 pt-4">
+                            <dt class="font-large text-md text-gray-500">Temp</dt>
+                            <dd class="mt-2 font-medium text-7xl text-gray-900">{{ roundedData.temp || '?' }}&#176;F</dd>
+                        </div>
+                        <div class="border-t border-gray-300 pt-4">
+                            <dt class="font-medium text-md text-gray-500">Max/Min</dt>
+                            <dd class="mt-2 text-4xl text-gray-900">{{ roundedData.temp_max || '?' }}&#176;F/ {{ roundedData.temp_min || '?' }}&#176;F</dd>
+                        </div>
+                        <div class="border-t border-gray-300 pt-4">
+                            <dt class="font-medium text-md text-gray-500">Feels Like</dt>
+                            <dd class="mt-2 text-4xl text-gray-900">{{ roundedData.feels_like || '?' }}&#176;F</dd>
+                        </div>
+                        <div class="border-t border-gray-300 pt-4">
+                            <dt class="font-medium text-md text-gray-500">Humidity</dt>
+                            <dd class="mt-2 text-4xl text-gray-900">{{ roundedData.humidity || '?' }}&#37;</dd>
+                        </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 
-  <v-bottom-navigation
-        width="400px">
-  <v-btn value="recent">
-    <v-icon>mdi-history</v-icon>
+<script>
+  // First, we import the necessary functions from the Vue library.
+    const { onMounted, ref, computed } = Vue
+    //onMounted is a lifecycle hook in Vue.js that allows you to run code when a component is mounted to the DOM.
+//ref is a Vue.js feature that creates a reactive reference to an element or a value, which can be accessed and modified in the template and the component's logic.
+//computed is a Vue.js feature that allows you to define a computed property, which is a value that is derived from other data properties and is automatically updated when its dependencies change.
+    // Next, we create a new Vue app.
+    const app = Vue.createApp({
+    
+      /*The setup() function defines reactive variables using the 
+      ref() function and a computed property using the computed() function.
 
-    Recent
-  </v-btn>
+The search() function is an asynchronous function that is called when 
+the user presses the Enter key in the search bar. 
+It sends an HTTP GET request to the OpenWeatherMap API and retrieves weather data 
+for the specified zip code. If the request is successful, 
+it updates the reactive variables cities, weatherData, and dateTime.*/
 
-  <v-btn value="favorites">
-    <v-icon>mdi-heart</v-icon>
+// Inside the app, we define a setup() function.
+    setup() {
+      // Here, we use the ref() function to define some reactive variables.
+        const roundedData = computed(() => roundedValue())
+        const cities = ref() // This will store the name of the city that we're searching for.
+      const weatherData = ref({}) // This will store the weather data that we retrieve from the API.
+      const dateTime = ref(null) // This will store the date and time that we retrieve from the API.
+      const cityZip = ref('') // This will store the zip code that the user enters in the input field.
+        const apiKey = '713c23c0545cd0de3150dfe7dc9bab15';
+        // The search() function is called whenever the 
+        //user presses the Enter key in the input field.
+        const search = async (event) => {
+  // We check if the user pressed the "Enter" key.
+  if (event.key === "Enter") {
+    try {
+      // We define the API endpoint that we want to call.
+      const endpoint = `https://api.openweathermap.org/data/2.5/weather?zip=${cityZip.value},US&appid=${apiKey}&units=imperial`;
 
-    Favorites
-  </v-btn>
+      // We use the axios library to make an HTTP GET request to the OpenWeatherMap API.
+      const response = await axios.get(endpoint);
 
-  <v-btn value="nearby">
-    <v-icon>mdi-map-marker</v-icon>
+      // We check if the API returned any data.
+      if (response && response.data) {
+        // We update our reactive variable with the name of the city.
+        cities.value = response.data.name;
 
-    Nearby
-  </v-btn>
-   <v-btn value="alendar">
-    <v-icon>mdi-calendar</v-icon>
+        // We update our reactive variable with the weather data for the city.
+        weatherData.value = response.data.main;
 
-    Forecast
-  </v-btn>
-</v-bottom-navigation>
-        
-      </v-app>
-    </script>
-    <script>
-      const { createApp } = Vue;
-      const { createVuetify } = Vuetify;
-      
-      const vuetify = createVuetify();
-      
-      const app = createApp({
-  template: "#app-template",
-  data() {
-    return {
-      sunrise: "Sun rise & set",
-      weather:"weather Condition",
-      title:"title",
-      detail:"detail",
-      zipCode: "",
-    };
-  },
-  mounted() {
-    const cardElement = this.$refs.myCard;
-    // Retrieve the user's zip code from local storage
-    const storedZipCode = localStorage.getItem("zipCode");
-    if (storedZipCode) {
-      this.zipCode = storedZipCode;
-    }
-  },
+        // We format the date and time of the response data and update our reactive variable with it.
+        const dateTimeString = new Date(response.data.dt).toLocaleString("en-US");
+        dateTime.value = dateTimeString;
 
-  watch: {
-    // Save the user's zip code to local storage when it changes
-    zipCode(newZipCode) {
-      localStorage.setItem("zipCode", newZipCode);
+        // We clear the input field.
+        cityZip.value = "";
+      }
+    } catch (error) {
+      // We log any errors that occurred.
+      console.log(error, "error found!");
     }
   }
+           // `https://api.openweathermap.org/data/2.5/weather?zip=${cityZip.value},US&appid=${apiKey}&units=imperial`
+  }
+        // We use the computed() function to define a computed property 
+        //for our rounded weather data.
+        const roundedValue = () => {
+  // Create an empty object to store the rounded data
+  const roundData = {};
+
+  // Get the keys of the weatherData object using Object.keys
+  const keys = Object.keys(weatherData.value);
+
+  // Loop through each key using a for loop
+  for (let i = 0; i < keys.length; i++) {
+    // Get the value of the current key
+    const key = keys[i];
+    const value = weatherData.value[key];
+
+    // Round the value to the nearest whole number
+    const roundedValue = Math.round(value);
+
+    // Store the rounded value in the roundData object using the key
+    roundData[key] = roundedValue;
+  }
+              // Finally, we return the new rounded object.
+            return roundData
+        }
+
+        return {
+            cities,
+            weatherData,
+            dateTime,
+            cityZip,
+            search,
+            roundedData,
+            roundedValue
+            /*The return statement in the setup() 
+function returns an object that contains the reactive variables, 
+functions, and computed properties that are used in the application.*/
+        }
+    }
 })
-.use(vuetify)
-.mount("#app");
-
-    // Openweathermap API. Do not share it publicly.
-const api = '713c23c0545cd0de3150dfe7dc9bab15';
+app.mount('#app')
 
 
-
-
-const iconImg = document.getElementById('weather-icon');
-const Address = document.querySelector('#location');
-const Celcius = document.querySelector('.Celcius');
-const Fahrenheit = document.querySelector('.Fahrenheit');
-const description = document.querySelector('.description');
-const weather = document.querySelector('.weather');
-const sunriseData = document.querySelector('.sunrise');
-const sunsetData = document.querySelector('.sunset');
-
-
-
-window.addEventListener('load', () => {
- // Accesing Geolocation of User
- if (navigator.geolocation) {
-   navigator.geolocation.getCurrentPosition((position) => {
-     // Storing Longitude and Latitude in variables
-     Longitude = position.coords.longitude;
-     Latitude = position.coords.latitude;
-     
-     const base = `https://api.openweathermap.org/data/2.5/weather?lat=${Latitude}&lon=${Longitude}&appid=${api}&units=metric`;
-
-
-     // Using fetch to get data
-     fetch(base)
-       .then((response) => {
-         return response.json();
-       })
-       .then((data) => {
-        console.log (data);
-         const { temp, feels_like } = data.main;
-         const place = data.name;
-         const { description, icon } = data.weather[0];
-         const { sunrise, sunset } = data.sys;
-
-         const fahrenheit = (temp * 9) / 5 + 32;
-         // Converting Epoch(Unix) time to GMT
-         const sunriseGMT = new Date(sunrise * 1000);
-         const sunsetGMT = new Date(sunset * 1000);
-
-
-         // Interacting with DOM to show data
-         Address.textContent = `${place}`;
-         description.textContent = `${description}`;
-         weather.textContent = `${description}`;
-         Celcius.textContent = `${temp.toFixed(2)} °C`;
-         Fahrenheit.textContent = `${fahrenheit.toFixed(2)} °F`;
-         sunriseData.textContent = `${sunriseGMT.toLocaleDateString()}, ${sunriseGMT.toLocaleTimeString()}`;
-         sunsetData.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;
-       })
-       .catch((error) => {
-          console.error("Error fetching weather data:", error);
-        });
-    });
-  
-     // Retrieving the user's zip code from local storage
-     const storedZipCode = localStorage.getItem("zipCode");
-    if (storedZipCode) {
-      // Call the fetchWeatherData method with the stored zip code
-      fetchWeatherData(storedZipCode);
-    }
-  }
-});
-function fetchWeatherData(zipCode) {
-  ZipCode = position.coords.ZipCode;
-  const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&appid=${apiKey}`;
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          // Extract the weather data from the response
-          console.log(data);
-          const { temp, feels_like } = data.main;
-          const place = data.name;
-          const { description, icon } = data.weather[0];
-          const { sunrise, sunset } = data.sys;
-
-          const fahrenheit = (temp * 9) / 5 + 32;
-          // Converting Epoch(Unix) time to GMT
-          const sunriseGMT = new Date(sunrise * 1000);
-          const sunsetGMT = new Date(sunset * 1000);
-
-          // Interacting with DOM to show data
-          Address.textContent = `${place}`;
-         description.textContent = `${description}`;
-         weather.textContent = `${description}`;
-         Celcius.textContent = `${temp.toFixed(2)} °C`;
-         Fahrenheit.textContent = `${fahrenheit.toFixed(2)} °F`;
-         sunriseData.textContent = `${sunriseGMT.toLocaleDateString()}, ${sunriseGMT.toLocaleTimeString()}`;
-         sunsetData.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;
-       })
-       .catch((error) => {
-          console.error("Error fetching weather data:", error);
-        });
-    }
-   </script>
-
-    </script>
-  </body>
-</html>
+</script>
